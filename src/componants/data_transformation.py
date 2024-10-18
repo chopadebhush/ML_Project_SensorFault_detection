@@ -57,7 +57,7 @@ class DataTransformation:
             raise CustomException(e, sys)
 
     def initiate_data_transformation(self):
-        logging(
+        logging.info(
             "Enter into initiate data transformation method of data transformation class")
 
         try:
@@ -78,6 +78,7 @@ class DataTransformation:
 
             self.utils.save_object(
                 file_path=preprocessor_path, obj=preprocessor)
+
             train_arr = np.c_[X_train_scaled, np.array(y_train)]
             test_arr = np.c_[X_test_scaled, np.array(y_test)]
 

@@ -19,17 +19,17 @@ from dataclasses import dataclass
 @dataclass
 class ModelTrainerConfig:
     artifact_folder = os.path.join(artifact_folder)
-    train_model_path = os.path.join(artifact_folder, "model.pkl")
+    trained_model_path = os.path.join(artifact_folder, "model.pkl")
     expected_accuracy = 0.45
     model_config_file_path = os.path.join("config", "model.yaml")
 
 
 class ModelTrainer:
-    def __call__(self):
+    def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
         self.utils = MainUtils()
 
-        self.model = {
+        self.models = {
             'XGBClassifier': XGBClassifier(),
             'GradientBoostingClassifier': GradientBoostingClassifier(),
             'SVC': SVC(),
@@ -47,10 +47,11 @@ class ModelTrainer:
                 model = list(models.values())[i]
 
                 model.fit(X_train, y_train)  # training of models
-                y_pred = model.predict(X_test)
+                y_train_pred = model.predict(X_train)
+                y_test_pred = model.predict(X_test)
 
-                train_model_score = accuracy_score(y_train, y_pred)
-                test_model_score = accuracy_score(y_test, y_pred)
+                train_model_score = accuracy_score(y_train, y_train_pred)
+                test_model_score = accuracy_score(y_test, y_test_pred)
 
                 report[list(models.keys())[i]] = test_model_score
 
@@ -103,7 +104,7 @@ class ModelTrainer:
             best_params = grid_search.best_params_
             print("best params are:", best_params)
 
-            finetuned_model = best_model_object.set_params(*best_params)
+            finetuned_model = best_model_object.set_params(**best_params)
 
             return finetuned_model
         except Exception as e:
@@ -111,12 +112,13 @@ class ModelTrainer:
 
     def initiate_model_trainer(self, train_array, test_array):
         try:
-            logging("Enter into initiate model trainer method of model trainer class")
+            logging.info(
+                "Enter into initiate model trainer method of model trainer class")
             x_train, y_train, x_test, y_test = (
                 train_array[:, :-1],
                 train_array[:, -1],
                 test_array[:, :-1],
-                test_array[:, -1],
+                test_array[:, -1]
             )
 
             logging.info(f"Extracting model config file path")

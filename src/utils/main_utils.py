@@ -33,7 +33,7 @@ class MainUtils:
             raise CustomException(e, sys) from e
 
     @staticmethod
-    def save_object(self, file_path: str, obj: object) -> None:
+    def save_object(file_path: str, obj: object) -> None:
         logging.info("Enter the save object method MainUtils class")
 
         try:
@@ -46,7 +46,7 @@ class MainUtils:
             raise CustomException(e, sys) from e
 
     @staticmethod
-    def load_object(self, file_path: str) -> object:
+    def load_object(file_path: str) -> object:
         logging.info("Enter the load object method MainUtils class")
 
         try:

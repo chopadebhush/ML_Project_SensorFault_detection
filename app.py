@@ -28,7 +28,7 @@ def train_route():
         raise CustomException(e, sys)
 
 
-@app.route("/predict", methods=["POST", "GET"])
+@app.route("/predict", methods=['POST', 'GET'])
 def upload():
 
     try:
@@ -40,10 +40,13 @@ def upload():
             prediction_file_detail = prediction_pipeline.run_pipeline()
 
             logging.info("Prediction completed Downloading prediction File")
-            return send_file(prediction_file_detail.prediction_file_path, download_name=prediction_file_detail.prediction_file_name, as_attachment=True)
+
+            return send_file(prediction_file_detail.prediction_file_path,
+                             download_name=prediction_file_detail.prediction_file_name,
+                             as_attachment=True)
 
         else:
-            render_template("upload_file.html")
+            return render_template("upload_file.html")
 
     except Exception as e:
         raise CustomException(e, sys)
